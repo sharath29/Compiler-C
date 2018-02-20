@@ -1,0 +1,6 @@
+rm -rf lex.yy.c y.tab.c y.tab.h
+lex compiler.l
+yacc -d compiler.y
+gcc lex.yy.c y.tab.c -w -g
+./a.out input
+#rm -rf lex.yy.c y.tab.c y.tab.h a.out
