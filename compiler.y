@@ -100,8 +100,8 @@ Stmt:	WhileStmt
 Type:	INT {type = "int";}
 	| FLOAT {type = "float";}
 	| CHAR  {type = "char";}
-	| DOUBLE 
-	| VOID 
+	| DOUBLE {type = "double";}
+	| VOID 	{type = "void";}
 	;
 
 /* Loop Blocks */ 
