@@ -7,6 +7,5 @@ int main(){
 	char1a = 1;
 	dsplay(n);
 	return;
+	printf("s");
 }
-
-int display(int n){}

@@ -24,7 +24,8 @@ extern int scope;
 %left '<' '>' LE GE EQ NE LT GT
 %%
 
-start:	Function 
+start: start Function
+	| Function 
 	| Declaration
 	;
 
@@ -130,8 +131,7 @@ PrintFunc : PRINTF '(' Expr ')' ';'
 	;
 
 /*Expression Block*/
-Expr:	
-	| Expr LE Expr 
+Expr: Expr LE Expr 
 	| Expr GE Expr
 	| Expr NE Expr
 	| Expr EQ Expr

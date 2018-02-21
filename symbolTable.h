@@ -33,27 +33,25 @@ struct template* searchIndex(int index,char* str){
 	return temp;
 }
 
+struct template *makenode(char *name,char *token, char *type, char *scope){
+	struct template *entry = (struct template*) malloc(sizeof(struct template));
+	strcpy(entry->name,name);
+	strcpy(entry->token,token);
+	strcpy(entry->scope,scope);
+	strcpy(entry->type,type);
+	entry->next = NULL;
+	return entry;	
+}
+
 void insertHash(char *str,char *token,char *type,char *scope){
 	int index = hashFunction(str);
 	if(table[index] == NULL){
-		struct template *entry = (struct template*) malloc(sizeof(struct template));
-		strcpy(entry->name,str);
-		strcpy(entry->token,token);
-		strcpy(entry->scope,scope);
-		strcpy(entry->type,type);
-		entry->next = NULL;
-		table[index] = entry;
+		table[index] = makenode(str,token,type,scope);
 	}
 	else{
 		struct template *temp = searchIndex(index,str);
 		if(temp != NULL){
-			struct template *entry = (struct template*) malloc(sizeof(struct template));
-			strcpy(entry->name,str);
-			strcpy(entry->token,token);
-			strcpy(entry->scope,scope);
-			strcpy(entry->type,type);		
-			entry->next = NULL;
-			temp->next = entry;
+			temp->next = makenode(str,token,type,scope);
 		}
 	}
 }
