@@ -3,9 +3,23 @@
 //void display(int);
 
 int main(){
-	int n = 5, n1 = 4;
-	char1a = 1;
-	dsplay(n);
-	return;
-	printf("s");
+	int a = 7;
+	while(1){
+		int b = 5;
+	}
+	while(1){
+		int c = 7;
+	}
+	int d = 7;
+	while(3){
+		int e = 0;
+		while (1) {
+			int f = 87;
+		}
+	}
+}
+
+int main(){
+
+	int l = 0;
 }

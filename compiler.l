@@ -4,8 +4,9 @@
 #include "y.tab.h"
 char *tempid;
 char *type;
+char *stack = "";
 int scope=0;
-void insert(char*);
+void insert(char*,char*);
 %}
 
 
@@ -28,7 +29,7 @@ printf  return PRINTF;
 struct 	return STRUCT;
 ^"#include ".+ ;
 {digit}+       return NUM;
-{alpha}({alpha}|{digit})* {insert(yytext);return ID;}
+{alpha}({alpha}|{digit})* {insert(yytext,stack);return ID;}
 \"[^\"\n]+\" return STRING;
 "<="    return LE;
 ">="    return GE;
@@ -47,16 +48,20 @@ int yywrap(){
 }
 
 char *getScope(int scope){
-	if(scope == 0)
+	if(strlen(stack) == 0)
 		return "global";
-	else if(scope == 1)
-		return "main";
+	else if(strlen(stack) == 1)
+		return "function";
+	else if(strlen(stack) == 2)
+		return "loop";
+	else if(strlen(stack) == 3)
+		return "loop-loop";
 	else
-		return "for";
+		return "";
 }
-void insert(char *yytext){
+void insert(char *yytext, char *stack){
   int len = strlen(yytext);
   tempid = (char*)malloc((len+1)*sizeof(char));
   strcpy(tempid, yytext);
-  insertHash(tempid,"identifier",type,getScope(scope));
+  insertHash(tempid,"identifier",type,getScope(scope),stack);
 }

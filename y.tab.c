@@ -1,8 +1,8 @@
-/* A Bison parser, made by GNU Bison 3.0.4.  */
+/* A Bison parser, made by GNU Bison 3.0.2.  */
 
 /* Bison implementation for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2015 Free Software Foundation, Inc.
+   Copyright (C) 1984, 1989-1990, 2000-2013 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -44,7 +44,7 @@
 #define YYBISON 1
 
 /* Bison version.  */
-#define YYBISON_VERSION "3.0.4"
+#define YYBISON_VERSION "3.0.2"
 
 /* Skeleton name.  */
 #define YYSKELETON_NAME "yacc.c"
@@ -66,6 +66,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "symbolTable.h"
 #include "y.tab.h"
 extern FILE *fp,*yyin;
@@ -74,8 +75,29 @@ extern char *yytext;
 extern char *tempid;
 extern char *type;
 extern int scope;
+extern char *stack;
 
-#line 79 "y.tab.c" /* yacc.c:339  */
+void push(int val){
+  char *temp;
+  int len = strlen(stack);
+  temp = (char *)malloc((len+1)*sizeof(char));
+  char num = val + '0';
+  int i=0;
+  for(i=0;i<len;++i){
+    temp[i] = stack[i];
+  }temp[i]=num;
+  temp[i+1]='\0';
+  stack = (char *)malloc((len+1)*sizeof(char));
+  strcpy(stack,temp);
+}
+
+void pop(){
+	int len = strlen(stack);
+	stack[len - 1] = '\0';
+}
+
+
+#line 101 "y.tab.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -127,7 +149,7 @@ extern int yydebug;
     INCLUDE = 272,
     DOT = 273,
     AND = 274,
-    OR = 275,
+    ORinsert = 275,
     LE = 276,
     GE = 277,
     EQ = 278,
@@ -154,7 +176,7 @@ extern int yydebug;
 #define INCLUDE 272
 #define DOT 273
 #define AND 274
-#define OR 275
+#define ORinsert 275
 #define LE 276
 #define GE 277
 #define EQ 278
@@ -178,7 +200,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 182 "y.tab.c" /* yacc.c:358  */
+#line 204 "y.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -478,14 +500,14 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    27,    27,    28,    29,    33,    34,    35,    36,    37,
-      38,    39,    43,    44,    45,    46,    47,    48,    49,    50,
-      51,    52,    53,    54,    55,    56,    57,    58,    59,    60,
-      61,    62,    63,    67,    68,    72,    76,    78,    79,    81,
-      82,    84,    86,    86,    89,    90,    92,    93,    94,    95,
-      96,    97,   101,   102,   103,   104,   105,   109,   110,   114,
-     115,   116,   117,   121,   126,   130,   134,   135,   136,   137,
-     138,   139,   140,   141,   142
+       0,    49,    49,    50,    51,    55,    56,    57,    58,    59,
+      60,    61,    65,    66,    67,    68,    69,    70,    71,    72,
+      73,    74,    75,    76,    77,    78,    79,    80,    81,    82,
+      83,    84,    85,    89,    90,    94,    98,   100,   101,   103,
+     104,   106,   108,   108,   111,   112,   114,   115,   116,   117,
+     118,   119,   123,   124,   125,   126,   127,   131,   132,   136,
+     137,   138,   139,   143,   148,   152,   156,   157,   158,   159,
+     160,   161,   162,   163,   164
 };
 #endif
 
@@ -496,9 +518,9 @@ static const char *const yytname[] =
 {
   "$end", "error", "$undefined", "INT", "FLOAT", "CHAR", "DOUBLE", "VOID",
   "STRING", "FOR", "WHILE", "IF", "ELSE", "PRINTF", "STRUCT", "NUM", "ID",
-  "INCLUDE", "DOT", "'='", "AND", "OR", "'<'", "'>'", "LE", "GE", "EQ",
-  "NE", "LT", "GT", "';'", "','", "'+'", "'-'", "'*'", "'/'", "'('", "')'",
-  "'['", "']'", "'{'", "'}'", "$accept", "start", "Declaration",
+  "INCLUDE", "DOT", "'='", "AND", "ORinsert", "'<'", "'>'", "LE", "GE",
+  "EQ", "NE", "LT", "GT", "';'", "','", "'+'", "'-'", "'*'", "'/'", "'('",
+  "')'", "'['", "']'", "'{'", "'}'", "$accept", "start", "Declaration",
   "Assignment", "FunctionCall", "ArrayUsage", "Function", "ArgListOpt",
   "ArgList", "Arg", "CompoundStmt", "$@1", "StmtList", "Stmt", "Type",
   "WhileStmt", "ForStmt", "IfStmt", "StructStmt", "PrintFunc", "Expr", YY_NULLPTR
@@ -1389,49 +1411,49 @@ yyreduce:
   switch (yyn)
     {
         case 42:
-#line 86 "compiler.y" /* yacc.c:1646  */
-    {++scope;}
-#line 1395 "y.tab.c" /* yacc.c:1646  */
+#line 108 "compiler.y" /* yacc.c:1646  */
+    {++scope;push(scope);}
+#line 1417 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 43:
-#line 86 "compiler.y" /* yacc.c:1646  */
-    {--scope;}
-#line 1401 "y.tab.c" /* yacc.c:1646  */
+#line 108 "compiler.y" /* yacc.c:1646  */
+    {pop();}
+#line 1423 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 52:
-#line 101 "compiler.y" /* yacc.c:1646  */
+#line 123 "compiler.y" /* yacc.c:1646  */
     {type = "int";}
-#line 1407 "y.tab.c" /* yacc.c:1646  */
+#line 1429 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 53:
-#line 102 "compiler.y" /* yacc.c:1646  */
+#line 124 "compiler.y" /* yacc.c:1646  */
     {type = "float";}
-#line 1413 "y.tab.c" /* yacc.c:1646  */
+#line 1435 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 54:
-#line 103 "compiler.y" /* yacc.c:1646  */
+#line 125 "compiler.y" /* yacc.c:1646  */
     {type = "char";}
-#line 1419 "y.tab.c" /* yacc.c:1646  */
+#line 1441 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 55:
-#line 104 "compiler.y" /* yacc.c:1646  */
+#line 126 "compiler.y" /* yacc.c:1646  */
     {type = "double";}
-#line 1425 "y.tab.c" /* yacc.c:1646  */
+#line 1447 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 56:
-#line 105 "compiler.y" /* yacc.c:1646  */
+#line 127 "compiler.y" /* yacc.c:1646  */
     {type = "void";}
-#line 1431 "y.tab.c" /* yacc.c:1646  */
+#line 1453 "y.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1435 "y.tab.c" /* yacc.c:1646  */
+#line 1457 "y.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1659,23 +1681,23 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 144 "compiler.y" /* yacc.c:1906  */
+#line 166 "compiler.y" /* yacc.c:1906  */
 
 
 int main(int argc, char *argv[])
 {
 	yyin = fopen(argv[1], "r");
-	
+
    if(!yyparse())
 		printf("\nParsing complete\n");
 	else
 		printf("\nParsing failed\n");
-	
-	display();	
+
+	display();
 	fclose(yyin);
     return 0;
 }
-         
+
 yyerror(char *s) {
 	printf("%d : %s %s\n", yylineno, s, yytext );
-}         
+}
