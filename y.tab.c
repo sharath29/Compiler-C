@@ -97,7 +97,8 @@ void pop(){
 }
 
 
-#line 101 "y.tab.c" /* yacc.c:339  */
+
+#line 102 "y.tab.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -200,7 +201,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 204 "y.tab.c" /* yacc.c:358  */
+#line 205 "y.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -500,14 +501,14 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    49,    49,    50,    51,    55,    56,    57,    58,    59,
-      60,    61,    65,    66,    67,    68,    69,    70,    71,    72,
-      73,    74,    75,    76,    77,    78,    79,    80,    81,    82,
-      83,    84,    85,    89,    90,    94,    98,   100,   101,   103,
-     104,   106,   108,   108,   111,   112,   114,   115,   116,   117,
-     118,   119,   123,   124,   125,   126,   127,   131,   132,   136,
-     137,   138,   139,   143,   148,   152,   156,   157,   158,   159,
-     160,   161,   162,   163,   164
+       0,    50,    50,    51,    52,    56,    57,    58,    59,    60,
+      61,    62,    66,    67,    68,    69,    70,    71,    72,    73,
+      74,    75,    76,    77,    78,    79,    80,    81,    82,    83,
+      84,    85,    86,    90,    91,    95,    99,   101,   102,   104,
+     105,   107,   109,   109,   112,   113,   115,   116,   117,   118,
+     119,   120,   124,   125,   126,   127,   128,   132,   133,   137,
+     138,   139,   140,   144,   149,   153,   157,   158,   159,   160,
+     161,   162,   163,   164,   165
 };
 #endif
 
@@ -1411,49 +1412,49 @@ yyreduce:
   switch (yyn)
     {
         case 42:
-#line 108 "compiler.y" /* yacc.c:1646  */
+#line 109 "compiler.y" /* yacc.c:1646  */
     {++scope;push(scope);}
-#line 1417 "y.tab.c" /* yacc.c:1646  */
+#line 1418 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 43:
-#line 108 "compiler.y" /* yacc.c:1646  */
+#line 109 "compiler.y" /* yacc.c:1646  */
     {pop();}
-#line 1423 "y.tab.c" /* yacc.c:1646  */
+#line 1424 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 52:
-#line 123 "compiler.y" /* yacc.c:1646  */
+#line 124 "compiler.y" /* yacc.c:1646  */
     {type = "int";}
-#line 1429 "y.tab.c" /* yacc.c:1646  */
+#line 1430 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 53:
-#line 124 "compiler.y" /* yacc.c:1646  */
+#line 125 "compiler.y" /* yacc.c:1646  */
     {type = "float";}
-#line 1435 "y.tab.c" /* yacc.c:1646  */
+#line 1436 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 54:
-#line 125 "compiler.y" /* yacc.c:1646  */
+#line 126 "compiler.y" /* yacc.c:1646  */
     {type = "char";}
-#line 1441 "y.tab.c" /* yacc.c:1646  */
+#line 1442 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 55:
-#line 126 "compiler.y" /* yacc.c:1646  */
+#line 127 "compiler.y" /* yacc.c:1646  */
     {type = "double";}
-#line 1447 "y.tab.c" /* yacc.c:1646  */
+#line 1448 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 56:
-#line 127 "compiler.y" /* yacc.c:1646  */
+#line 128 "compiler.y" /* yacc.c:1646  */
     {type = "void";}
-#line 1453 "y.tab.c" /* yacc.c:1646  */
+#line 1454 "y.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1457 "y.tab.c" /* yacc.c:1646  */
+#line 1458 "y.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1681,7 +1682,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 166 "compiler.y" /* yacc.c:1906  */
+#line 167 "compiler.y" /* yacc.c:1906  */
 
 
 int main(int argc, char *argv[])
