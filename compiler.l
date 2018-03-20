@@ -7,15 +7,25 @@ char *type;
 char *stack = "";
 int scope=0;
 void insert(char*,char*);
+char string_buf[100];
+//{type_declaration}[ ]*{identifier} {check(yytext);return;}
 %}
+
+%x VALUEPARSE ENDSTATE
+
+
 
 
 alpha [a-zA-Z]
 digit [0-9]
+identifier {alpha}({alpha}|{digit})*
+type_declaration "int "|"float "|"char "|"double "|"void "
 
 %%
 [ \t]		;
 [ \n]   { yylineno = yylineno + 1;}
+
+
 int	return INT;
 float return FLOAT;
 char return CHAR;
@@ -28,8 +38,8 @@ else	return ELSE;
 printf  return PRINTF;
 struct 	return STRUCT;
 ^"#include ".+ ;
-{digit}+       return NUM;
-{alpha}({alpha}|{digit})* {insert(yytext,stack);return ID;}
+{digit}+       return NUM; 
+{alpha}({alpha}|{digit})* {yylval.str = strdup(yytext);return ID;}
 \"[^\"\n]+\" return STRING;
 "<="    return LE;
 ">="    return GE;
@@ -47,6 +57,17 @@ int yywrap(){
 	return 1;
 }
 
+/*
+<INITIAL>{type_declaration}[ ]*     {BEGIN(VALUEPARSE);}
+<VALUEPARSE>{identifier}    {check(yytext);BEGIN(ENDSTATE);}
+<ENDSTATE>";"    {BEGIN(INITIAL);}
+*/
+void check(char *str){
+	int index = hashFunction(str,stack);
+	struct template *temp = searchIndex(index,str);
+	if(temp == NULL) printf("already declared\n");
+}
+
 char *getScope(int scope){
 	if(strlen(stack) == 0)
 		return "global";
@@ -59,6 +80,8 @@ char *getScope(int scope){
 	else
 		return "";
 }
+
+
 void insert(char *yytext, char *stack){
   int len = strlen(yytext);
   tempid = (char*)malloc((len+1)*sizeof(char));

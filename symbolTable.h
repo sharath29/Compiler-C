@@ -13,11 +13,13 @@ struct template{
 	struct template *next;
 }*table[100];
 
-int hashFunction(char *str){
+int hashFunction(char *str,char *scopeid){
 	int sum = 0;
 	for(i=0;str[i]!='\0';i++){
 		sum += str[i];
 	}
+	for(i=0;scopeid[i]!='\0';++i)
+		sum += scopeid[i];
 	return sum % 100;
 }
 
@@ -48,7 +50,7 @@ struct template *makenode(char *name,char *token, char *type, char *scope, char 
 }
 
 void insertHash(char *str,char *token,char *type,char *scope, char *stack){
-	int index = hashFunction(str);
+	int index = hashFunction(str,stack);
 	if(table[index] == NULL){
 		table[index] = makenode(str,token,type,scope,stack);
 	}

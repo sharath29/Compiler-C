@@ -1,8 +1,8 @@
-/* A Bison parser, made by GNU Bison 3.0.2.  */
+/* A Bison parser, made by GNU Bison 3.0.4.  */
 
 /* Bison implementation for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2013 Free Software Foundation, Inc.
+   Copyright (C) 1984, 1989-1990, 2000-2015 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -44,7 +44,7 @@
 #define YYBISON 1
 
 /* Bison version.  */
-#define YYBISON_VERSION "3.0.2"
+#define YYBISON_VERSION "3.0.4"
 
 /* Skeleton name.  */
 #define YYSKELETON_NAME "yacc.c"
@@ -76,6 +76,7 @@ extern char *tempid;
 extern char *type;
 extern int scope;
 extern char *stack;
+int flag=0;
 
 void push(int val){
   char *temp;
@@ -96,9 +97,19 @@ void pop(){
 	stack[len - 1] = '\0';
 }
 
+void func(char *str){
+	int index = hashFunction(str,stack);
+	struct template *temp = searchIndex(index,str);
+	if(temp == NULL)
+		printf("already declared\n");
+	else{
+		insert(str,stack);
+		printf("inserted %s\n",str);
+	}
+}
 
 
-#line 102 "y.tab.c" /* yacc.c:339  */
+#line 113 "y.tab.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -150,7 +161,7 @@ extern int yydebug;
     INCLUDE = 272,
     DOT = 273,
     AND = 274,
-    ORinsert = 275,
+    OR = 275,
     LE = 276,
     GE = 277,
     EQ = 278,
@@ -177,7 +188,7 @@ extern int yydebug;
 #define INCLUDE 272
 #define DOT 273
 #define AND 274
-#define ORinsert 275
+#define OR 275
 #define LE 276
 #define GE 277
 #define EQ 278
@@ -187,7 +198,18 @@ extern int yydebug;
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-typedef int YYSTYPE;
+
+union YYSTYPE
+{
+#line 60 "compiler.y" /* yacc.c:355  */
+
+	int ivalue;
+	char *str;
+
+#line 210 "y.tab.c" /* yacc.c:355  */
+};
+
+typedef union YYSTYPE YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
 #endif
@@ -201,7 +223,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 205 "y.tab.c" /* yacc.c:358  */
+#line 227 "y.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -501,14 +523,14 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    50,    50,    51,    52,    56,    57,    58,    59,    60,
-      61,    62,    66,    67,    68,    69,    70,    71,    72,    73,
-      74,    75,    76,    77,    78,    79,    80,    81,    82,    83,
-      84,    85,    86,    90,    91,    95,    99,   101,   102,   104,
-     105,   107,   109,   109,   112,   113,   115,   116,   117,   118,
-     119,   120,   124,   125,   126,   127,   128,   132,   133,   137,
-     138,   139,   140,   144,   149,   153,   157,   158,   159,   160,
-     161,   162,   163,   164,   165
+       0,    67,    67,    68,    69,    73,    74,    75,    76,    77,
+      78,    79,    84,    85,    86,    87,    88,    89,    90,    91,
+      92,    93,    94,    95,    96,    97,    98,    99,   100,   101,
+     102,   103,   104,   108,   109,   113,   117,   119,   120,   122,
+     123,   125,   127,   127,   130,   131,   133,   134,   135,   136,
+     137,   138,   142,   143,   144,   145,   146,   150,   151,   155,
+     156,   157,   158,   162,   167,   171,   175,   176,   177,   178,
+     179,   180,   181,   182,   183
 };
 #endif
 
@@ -519,9 +541,9 @@ static const char *const yytname[] =
 {
   "$end", "error", "$undefined", "INT", "FLOAT", "CHAR", "DOUBLE", "VOID",
   "STRING", "FOR", "WHILE", "IF", "ELSE", "PRINTF", "STRUCT", "NUM", "ID",
-  "INCLUDE", "DOT", "'='", "AND", "ORinsert", "'<'", "'>'", "LE", "GE",
-  "EQ", "NE", "LT", "GT", "';'", "','", "'+'", "'-'", "'*'", "'/'", "'('",
-  "')'", "'['", "']'", "'{'", "'}'", "$accept", "start", "Declaration",
+  "INCLUDE", "DOT", "'='", "AND", "OR", "'<'", "'>'", "LE", "GE", "EQ",
+  "NE", "LT", "GT", "';'", "','", "'+'", "'-'", "'*'", "'/'", "'('", "')'",
+  "'['", "']'", "'{'", "'}'", "$accept", "start", "Declaration",
   "Assignment", "FunctionCall", "ArrayUsage", "Function", "ArgListOpt",
   "ArgList", "Arg", "CompoundStmt", "$@1", "StmtList", "Stmt", "Type",
   "WhileStmt", "ForStmt", "IfStmt", "StructStmt", "PrintFunc", "Expr", YY_NULLPTR
@@ -1411,50 +1433,110 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
-        case 42:
-#line 109 "compiler.y" /* yacc.c:1646  */
+        case 12:
+#line 84 "compiler.y" /* yacc.c:1646  */
+    {if(flag) func((yyvsp[-2].str));flag=0;}
+#line 1440 "y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 13:
+#line 85 "compiler.y" /* yacc.c:1646  */
+    {if(flag) func((yyvsp[-2].str));flag=0;}
+#line 1446 "y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 14:
+#line 86 "compiler.y" /* yacc.c:1646  */
+    {if(flag) func((yyvsp[-2].str));flag=0;}
+#line 1452 "y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 16:
+#line 88 "compiler.y" /* yacc.c:1646  */
+    {if(flag) func((yyvsp[-2].str));flag=0;}
+#line 1458 "y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 18:
+#line 90 "compiler.y" /* yacc.c:1646  */
+    {if(flag) func((yyvsp[-2].str));flag=0;}
+#line 1464 "y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 19:
+#line 91 "compiler.y" /* yacc.c:1646  */
+    {if(flag) func((yyvsp[-2].str));flag=0;}
+#line 1470 "y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 20:
+#line 92 "compiler.y" /* yacc.c:1646  */
+    {if(flag) func((yyvsp[-2].str));flag=0;}
+#line 1476 "y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 21:
+#line 93 "compiler.y" /* yacc.c:1646  */
+    {if(flag) func((yyvsp[-2].str));flag=0;}
+#line 1482 "y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 30:
+#line 102 "compiler.y" /* yacc.c:1646  */
+    {if(flag) func((yyvsp[0].str));flag=0;}
+#line 1488 "y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 32:
+#line 104 "compiler.y" /* yacc.c:1646  */
+    {if(flag) func((yyvsp[0].str));flag=0;}
+#line 1494 "y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 42:
+#line 127 "compiler.y" /* yacc.c:1646  */
     {++scope;push(scope);}
-#line 1418 "y.tab.c" /* yacc.c:1646  */
+#line 1500 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 43:
-#line 109 "compiler.y" /* yacc.c:1646  */
+#line 127 "compiler.y" /* yacc.c:1646  */
     {pop();}
-#line 1424 "y.tab.c" /* yacc.c:1646  */
+#line 1506 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 52:
-#line 124 "compiler.y" /* yacc.c:1646  */
-    {type = "int";}
-#line 1430 "y.tab.c" /* yacc.c:1646  */
+#line 142 "compiler.y" /* yacc.c:1646  */
+    {type = "int";flag=1;}
+#line 1512 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 53:
-#line 125 "compiler.y" /* yacc.c:1646  */
+#line 143 "compiler.y" /* yacc.c:1646  */
     {type = "float";}
-#line 1436 "y.tab.c" /* yacc.c:1646  */
+#line 1518 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 54:
-#line 126 "compiler.y" /* yacc.c:1646  */
+#line 144 "compiler.y" /* yacc.c:1646  */
     {type = "char";}
-#line 1442 "y.tab.c" /* yacc.c:1646  */
+#line 1524 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 55:
-#line 127 "compiler.y" /* yacc.c:1646  */
+#line 145 "compiler.y" /* yacc.c:1646  */
     {type = "double";}
-#line 1448 "y.tab.c" /* yacc.c:1646  */
+#line 1530 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 56:
-#line 128 "compiler.y" /* yacc.c:1646  */
+#line 146 "compiler.y" /* yacc.c:1646  */
     {type = "void";}
-#line 1454 "y.tab.c" /* yacc.c:1646  */
+#line 1536 "y.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1458 "y.tab.c" /* yacc.c:1646  */
+#line 1540 "y.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1682,7 +1764,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 167 "compiler.y" /* yacc.c:1906  */
+#line 185 "compiler.y" /* yacc.c:1906  */
 
 
 int main(int argc, char *argv[])

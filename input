@@ -1,28 +1,7 @@
-#include <stdio.h>
-#include <stdlib.h>
-//void display(int);
-int glob = 0;
-
 int main(){
-	int a = 7;
+	int a;
+	int b[9];
 	while(1){
-		int b = 5;
-		int a = 8;
+		int a;
 	}
-	while(1){
-		int c = 7;
-		float x =0;
-	}
-	int d = 7;
-	while(3){
-		int e = 0;
-		while (1) {
-			int f = 87;
-		}
-	}
-}
-
-int ma(){
-
-	int l = 0;
 }

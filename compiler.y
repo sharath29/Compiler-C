@@ -11,6 +11,7 @@ extern char *tempid;
 extern char *type;
 extern int scope;
 extern char *stack;
+int flag=0;
 
 void push(int val){
   char *temp;
@@ -31,6 +32,16 @@ void pop(){
 	stack[len - 1] = '\0';
 }
 
+void func(char *str){
+	int index = hashFunction(str,stack);
+	struct template *temp = searchIndex(index,str);
+	if(temp == NULL)
+		printf("already declared\n");
+	else{
+		insert(str,stack);
+		printf("inserted %s\n",str);
+	}
+}
 
 %}
 
@@ -38,23 +49,29 @@ void pop(){
 %token FOR WHILE
 %token IF ELSE PRINTF
 %token STRUCT
-%token NUM ID
+%token<str> NUM ID
 %token INCLUDE
 %token DOT
 
 %right '='
-%left AND ORinsert
+%left AND OR 
 %left '<' '>' LE GE EQ NE LT GT
+
+%union{
+	int ivalue;
+	char *str;
+}
+
 %%
 
 start: start Function
 	| Function
-	| Declaration
+	| Declaration 
 	;
 
 /* Declaration block */
-Declaration: Type Assignment ';'
-	| Assignment ';'
+Declaration: Type Assignment ';'    
+ 	| Assignment ';'
 	| FunctionCall ';'
 	| ArrayUsage ';'
 	| Type ArrayUsage ';'
@@ -62,28 +79,29 @@ Declaration: Type Assignment ';'
 	| error
 	;
 
+
 /* Assignment block */
-Assignment: ID '=' Assignment
-	| ID '=' FunctionCall
-	| ID '=' ArrayUsage
+Assignment: ID '=' Assignment {if(flag) func($1);flag=0;}
+	| ID '=' FunctionCall {if(flag) func($1);flag=0;}
+	| ID '=' ArrayUsage {if(flag) func($1);flag=0;}
 	| ArrayUsage '=' Assignment
-	| ID ',' Assignment
+	| ID ',' Assignment {if(flag) func($1);flag=0;}
 	| NUM ',' Assignment
-	| ID '+' Assignment
-	| ID '-' Assignment
-	| ID '*' Assignment
-	| ID '/' Assignment
+	| ID '+' Assignment {if(flag) func($1);flag=0;}
+	| ID '-' Assignment {if(flag) func($1);flag=0;}
+	| ID '*' Assignment {if(flag) func($1);flag=0;}
+	| ID '/' Assignment {if(flag) func($1);flag=0;}
 	| NUM '+' Assignment
 	| NUM '-' Assignment
 	| NUM '*' Assignment
 	| NUM '/' Assignment
-	| STRING
+	| STRING 
 	| '(' Assignment ')'
 	| '-' '(' Assignment ')'
 	| '-' NUM
-	| '-' ID
-	|   NUM
-	|   ID
+	| '-' ID {if(flag) func($2);flag=0;}
+	| NUM
+	| ID {if(flag) func($1);flag=0;}
 	;
 
 /* Function Call Block */
@@ -98,13 +116,13 @@ ArrayUsage : ID'['Assignment']'
 /* Function block */
 Function: Type ID '(' ArgListOpt ')' CompoundStmt
 	;
-ArgListOpt: ArgList
+ArgListOpt: ArgList 
 	|
 	;
-ArgList:  ArgList ',' Arg
-	| Arg
+ArgList:  ArgList ',' Arg 	
+	| Arg 					
 	;
-Arg:	Type ID
+Arg:	Type ID 
 	;
 CompoundStmt:	'{' {++scope;push(scope);} StmtList '}' {pop();}
 	;
@@ -121,7 +139,7 @@ Stmt:	WhileStmt
 	;
 
 /* Type Identifier block */
-Type:	INT {type = "int";}
+Type:	INT {type = "int";flag=1;}
 	| FLOAT {type = "float";}
 	| CHAR  {type = "char";}
 	| DOUBLE {type = "double";}
