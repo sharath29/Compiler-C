@@ -6,7 +6,7 @@ char *tempid;
 char *type;
 char *stack = "";
 int scope=0;
-void insert(char*,char*);
+void insert(char*,char*,int);
 char string_buf[100];
 //{type_declaration}[ ]*{identifier} {check(yytext);return;}
 %}
@@ -78,9 +78,9 @@ char *getScope(int scope){
 }
 
 
-void insert(char *yytext, char *stack){
+void insert(char *yytext, char *stack,int dim){
   int len = strlen(yytext);
   tempid = (char*)malloc((len+1)*sizeof(char));
   strcpy(tempid, yytext);
-  insertHash(tempid,"identifier",type,getScope(scope),stack);
+  insertHash(tempid,"identifier",type,getScope(scope),stack,dim);
 }

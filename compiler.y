@@ -39,36 +39,37 @@ void func(char *str){
 	if(temp == NULL)
 		printf("already declared\n");
 	else{
-		insert(str,stack);
+		insert(str,stack,0);
 		printf("inserted %s\n",str);
 	}
 }
 
-void funcArray(char *str1,int str2){
+void funcArray(char *str1,int dim){
 	int index = hashFunction(str1,stack);
-	printf("%d\n",str2);
+	printf("%d\n",dim);
 	struct template *temp = searchIndex(index,str1);
 	if(temp == NULL)
 		printf("already declared\n");
 	else{
-		insert(str1,stack);
+		insert(str1,stack,dim);
 		printf("inserted %s\n",str1);
 	}
 }
 
 checkInsert(char *str){
+	printf("flag %d",flag);
 	if(flag){
 		func(str);
 	} 
 	else{
 		checkPresent(str);
 	}
-	flag=0;	
 }
 
 void checkPresent(char *str){
-	int flag = 1;
+	int flag = 0;
 	int len = strlen(stack);
+	printf("len %d\n",len);
 	for(i=len;i>0;--i){
 		char *tempstr;
 		tempstr = (char *)malloc((i+1)*sizeof(char));
@@ -78,12 +79,12 @@ void checkPresent(char *str){
 		}tempstr[j]='\0';
 		int index = hashFunction(str,tempstr);
 		struct template *temp = searchIndex(index,str);
-		
+		printf("str %s\n",tempstr);
 		//struct template *ptr = table[index];
 		//printf("(%s,\t%s,\t%s,\t%s,\t%s,\t%d)\t", ptr->name,ptr->token,ptr->type,ptr->scope,ptr->stack,	ptr->level);
 		
-		if(temp != NULL)
-			flag=0;
+		if(temp == NULL)
+			flag=1;
 	}
 	if(!flag)
 		printf("%s not declared\n",str);
@@ -117,27 +118,28 @@ start: start Function
 	;
 
 /* Declaration block */
-Declaration: Type Assignment ';'    
+Declaration: Type Assignment ';' {flag=0;}
  	| Assignment ';'
 	| FunctionCall ';'
 	| ArrayUsage ';'
-	| Type ArrayUsage ';'
+	| Type ArrayUsage ';' {flag=0;}
 	| StructStmt ';'
 	| error
 	;
 
 
 /* Assignment block */
-Assignment: ID '=' Assignment {checkInsert($1);}
-	| ID '=' FunctionCall {if(flag) func($1);flag=0;}
-	| ID '=' ArrayUsage {if(flag) func($1);flag=0;}
+Assignment: ID '=' Assignment {printf("hi %d\n",flag);checkInsert($1);}
+	| ID '=' FunctionCall {if(flag) func($1);}
+	| ID '=' ArrayUsage {if(flag) func($1);}
 	| ArrayUsage '=' Assignment
-	| ID ',' Assignment {if(flag) func($1);flag=0;}
+	| ID ',' Assignment {if(flag) func($1);}
+	| ID ',' ArrayUsage {if(flag) func($1);}
 	| NUM ',' Assignment
-	| ID '+' Assignment {if(flag) func($1);flag=0;}
-	| ID '-' Assignment {if(flag) func($1);flag=0;}
-	| ID '*' Assignment {if(flag) func($1);flag=0;}
-	| ID '/' Assignment {if(flag) func($1);flag=0;}
+	| ID '+' Assignment {if(flag) func($1);}
+	| ID '-' Assignment {if(flag) func($1);}
+	| ID '*' Assignment {if(flag) func($1);}
+	| ID '/' Assignment {if(flag) func($1);}
 	| NUM '+' Assignment
 	| NUM '-' Assignment
 	| NUM '*' Assignment
@@ -146,9 +148,9 @@ Assignment: ID '=' Assignment {checkInsert($1);}
 	| '(' Assignment ')'
 	| '-' '(' Assignment ')'
 	| '-' NUM
-	| '-' ID {if(flag) func($2);flag=0;}
+	| '-' ID {if(flag) func($2);}
 	| NUM {arrayDim = $1;}
-	| ID {if(flag) func($1);flag=0;}
+	| ID {if(flag) func($1);}
 	;
 
 /* Function Call Block */
@@ -157,7 +159,7 @@ FunctionCall : ID'('')'
 	;
 
 /* Array Usage */
-ArrayUsage : ID'['Assignment']' {if(flag) funcArray($1,arrayDim);flag=0;}
+ArrayUsage : ID'['Assignment']' {printf("flag %d\n",flag);if(flag) funcArray($1,arrayDim);}
 	
 
 /* Function block */

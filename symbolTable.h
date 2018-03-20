@@ -38,7 +38,7 @@ struct template* searchIndex(int index,char* str){
 	return temp;
 }
 
-struct template *makenode(char *name,char *token, char *type, char *scope, char *stack){
+struct template *makenode(char *name,char *token, char *type, char *scope, char *stack,int dim){
 	struct template *entry = (struct template*) malloc(sizeof(struct template));
 	strcpy(entry->name,name);
 	strcpy(entry->token,token);
@@ -46,19 +46,20 @@ struct template *makenode(char *name,char *token, char *type, char *scope, char 
 	strcpy(entry->type,type);
 	strcpy(entry->stack,stack);
 	entry->level = strlen(stack);
+	entry->dimension = dim;
 	entry->next = NULL;
 	return entry;
 }
 
-void insertHash(char *str,char *token,char *type,char *scope, char *stack){
+void insertHash(char *str,char *token,char *type,char *scope, char *stack, int dim){
 	int index = hashFunction(str,stack);
 	if(table[index] == NULL){
-		table[index] = makenode(str,token,type,scope,stack);
+		table[index] = makenode(str,token,type,scope,stack,dim);
 	}
 	else{
 		struct template *temp = searchIndex(index,str);
 		if(temp != NULL){
-			temp->next = makenode(str,token,type,scope,stack);
+			temp->next = makenode(str,token,type,scope,stack,dim);
 		}
 	}
 }
@@ -70,7 +71,11 @@ void display(){
 		if(table[i] != NULL){
 			ptr = table[i];
 			while(ptr != NULL){
-				printf("(%s,\t%s,\t%s,\t%s,\t%s,\t%d)\t", ptr->name,ptr->token,ptr->type,ptr->scope,ptr->stack,	ptr->level);
+				if(ptr->dimension == 0)
+					printf("(%s,\t%s,\t%s,\t%s,\t%s,\t%d)\t", ptr->name,ptr->token,ptr->type,ptr->scope,ptr->stack,ptr->level);
+				else
+					printf("(%s,\t%s,\t%s,\t%s,\t%s,\t%d,\t%d)\t", ptr->name,ptr->token,ptr->type,ptr->scope,ptr->stack,ptr->level,ptr->dimension);
+
 				ptr = ptr->next;
 			}printf("\n");
 		}
