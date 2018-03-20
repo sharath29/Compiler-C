@@ -13,6 +13,7 @@ extern int scope;
 extern char *stack;
 int flag=0;
 int arrayDim=0;
+int assgFlag=0;
 int i=0;
 
 void push(int val){
@@ -56,8 +57,24 @@ void funcArray(char *str1,int dim){
 	}
 }
 
-checkInsert(char *str){
-	printf("flag %d",flag);
+void typeCheck(char *str, int assgFlag){
+	printf("%s %d\n",str,assgFlag);
+	int index = hashFunction(str,stack);
+	struct template *temp = searchIndex(index,str);
+	if(temp == NULL){
+		struct template *ptr = table[index];
+		char *str = ptr->type;
+		printf("%s\n",str);
+		if( (strcmp(str,"int")==0 && assgFlag==1) || (strcmp(str,"char")==0 && assgFlag==2) ){}
+		else printf("mismatch\n");
+
+	}
+
+}
+
+
+checkInsert(char *str,int assgFlag){
+	typeCheck(str,assgFlag);
 	if(flag){
 		func(str);
 	} 
@@ -69,7 +86,6 @@ checkInsert(char *str){
 void checkPresent(char *str){
 	int flag = 0;
 	int len = strlen(stack);
-	printf("len %d\n",len);
 	for(i=len;i>0;--i){
 		char *tempstr;
 		tempstr = (char *)malloc((i+1)*sizeof(char));
@@ -79,7 +95,6 @@ void checkPresent(char *str){
 		}tempstr[j]='\0';
 		int index = hashFunction(str,tempstr);
 		struct template *temp = searchIndex(index,str);
-		printf("str %s\n",tempstr);
 		//struct template *ptr = table[index];
 		//printf("(%s,\t%s,\t%s,\t%s,\t%s,\t%d)\t", ptr->name,ptr->token,ptr->type,ptr->scope,ptr->stack,	ptr->level);
 		
@@ -129,7 +144,7 @@ Declaration: Type Assignment ';' {flag=0;}
 
 
 /* Assignment block */
-Assignment: ID '=' Assignment {printf("hi %d\n",flag);checkInsert($1);}
+Assignment: ID '=' Assignment {checkInsert($1,assgFlag);}
 	| ID '=' FunctionCall {if(flag) func($1);}
 	| ID '=' ArrayUsage {if(flag) func($1);}
 	| ArrayUsage '=' Assignment
@@ -144,12 +159,12 @@ Assignment: ID '=' Assignment {printf("hi %d\n",flag);checkInsert($1);}
 	| NUM '-' Assignment
 	| NUM '*' Assignment
 	| NUM '/' Assignment
-	| STRING 
+	| STRING {assgFlag = 2;}
 	| '(' Assignment ')'
 	| '-' '(' Assignment ')'
-	| '-' NUM
+	| '-' NUM {assgFlag = 1;}
 	| '-' ID {if(flag) func($2);}
-	| NUM {arrayDim = $1;}
+	| NUM {assgFlag = 1;arrayDim = $1;}
 	| ID {if(flag) func($1);}
 	;
 
@@ -159,7 +174,7 @@ FunctionCall : ID'('')'
 	;
 
 /* Array Usage */
-ArrayUsage : ID'['Assignment']' {printf("flag %d\n",flag);if(flag) funcArray($1,arrayDim);}
+ArrayUsage : ID'['Assignment']' {if(flag) funcArray($1,arrayDim);}
 	
 
 /* Function block */
@@ -190,7 +205,7 @@ Stmt:	WhileStmt
 /* Type Identifier block */
 Type:	INT {type = "int";flag=1;}
 	| FLOAT {type = "float";}
-	| CHAR  {type = "char";}
+	| CHAR  {type = "char";flag=2;}
 	| DOUBLE {type = "double";}
 	| VOID 	{type = "void";}
 	;

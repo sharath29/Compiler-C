@@ -78,6 +78,7 @@ extern int scope;
 extern char *stack;
 int flag=0;
 int arrayDim=0;
+int assgFlag=0;
 int i=0;
 
 void push(int val){
@@ -121,8 +122,24 @@ void funcArray(char *str1,int dim){
 	}
 }
 
-checkInsert(char *str){
-	printf("flag %d",flag);
+void typeCheck(char *str, int assgFlag){
+	printf("%s %d\n",str,assgFlag);
+	int index = hashFunction(str,stack);
+	struct template *temp = searchIndex(index,str);
+	if(temp == NULL){
+		struct template *ptr = table[index];
+		char *str = ptr->type;
+		printf("%s\n",str);
+		if( (strcmp(str,"int")==0 && assgFlag==1) || (strcmp(str,"char")==0 && assgFlag==2) ){}
+		else printf("mismatch\n");
+
+	}
+
+}
+
+
+checkInsert(char *str,int assgFlag){
+	typeCheck(str,assgFlag);
 	if(flag){
 		func(str);
 	} 
@@ -134,7 +151,6 @@ checkInsert(char *str){
 void checkPresent(char *str){
 	int flag = 0;
 	int len = strlen(stack);
-	printf("len %d\n",len);
 	for(i=len;i>0;--i){
 		char *tempstr;
 		tempstr = (char *)malloc((i+1)*sizeof(char));
@@ -144,7 +160,6 @@ void checkPresent(char *str){
 		}tempstr[j]='\0';
 		int index = hashFunction(str,tempstr);
 		struct template *temp = searchIndex(index,str);
-		printf("str %s\n",tempstr);
 		//struct template *ptr = table[index];
 		//printf("(%s,\t%s,\t%s,\t%s,\t%s,\t%d)\t", ptr->name,ptr->token,ptr->type,ptr->scope,ptr->stack,	ptr->level);
 		
@@ -156,7 +171,7 @@ void checkPresent(char *str){
 }
 
 
-#line 160 "y.tab.c" /* yacc.c:339  */
+#line 175 "y.tab.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -248,12 +263,12 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 108 "compiler.y" /* yacc.c:355  */
+#line 123 "compiler.y" /* yacc.c:355  */
 
 	int ivalue;
 	char *str;
 
-#line 257 "y.tab.c" /* yacc.c:355  */
+#line 272 "y.tab.c" /* yacc.c:355  */
 };
 
 typedef union YYSTYPE YYSTYPE;
@@ -270,7 +285,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 274 "y.tab.c" /* yacc.c:358  */
+#line 289 "y.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -570,14 +585,14 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,   115,   115,   116,   117,   121,   122,   123,   124,   125,
-     126,   127,   132,   133,   134,   135,   136,   137,   138,   139,
-     140,   141,   142,   143,   144,   145,   146,   147,   148,   149,
-     150,   151,   152,   153,   157,   158,   162,   166,   166,   168,
-     169,   171,   172,   174,   176,   176,   179,   180,   182,   183,
-     184,   185,   186,   187,   191,   192,   193,   194,   195,   199,
-     200,   204,   205,   206,   207,   211,   216,   220,   224,   225,
-     226,   227,   228,   229,   230,   231,   232
+       0,   130,   130,   131,   132,   136,   137,   138,   139,   140,
+     141,   142,   147,   148,   149,   150,   151,   152,   153,   154,
+     155,   156,   157,   158,   159,   160,   161,   162,   163,   164,
+     165,   166,   167,   168,   172,   173,   177,   181,   181,   183,
+     184,   186,   187,   189,   191,   191,   194,   195,   197,   198,
+     199,   200,   201,   202,   206,   207,   208,   209,   210,   214,
+     215,   219,   220,   221,   222,   226,   231,   235,   239,   240,
+     241,   242,   243,   244,   245,   246,   247
 };
 #endif
 
@@ -1482,145 +1497,157 @@ yyreduce:
   switch (yyn)
     {
         case 5:
-#line 121 "compiler.y" /* yacc.c:1646  */
+#line 136 "compiler.y" /* yacc.c:1646  */
     {flag=0;}
-#line 1488 "y.tab.c" /* yacc.c:1646  */
+#line 1503 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 9:
-#line 125 "compiler.y" /* yacc.c:1646  */
+#line 140 "compiler.y" /* yacc.c:1646  */
     {flag=0;}
-#line 1494 "y.tab.c" /* yacc.c:1646  */
+#line 1509 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 12:
-#line 132 "compiler.y" /* yacc.c:1646  */
-    {printf("hi %d\n",flag);checkInsert((yyvsp[-2].str));}
-#line 1500 "y.tab.c" /* yacc.c:1646  */
+#line 147 "compiler.y" /* yacc.c:1646  */
+    {checkInsert((yyvsp[-2].str),assgFlag);}
+#line 1515 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 13:
-#line 133 "compiler.y" /* yacc.c:1646  */
+#line 148 "compiler.y" /* yacc.c:1646  */
     {if(flag) func((yyvsp[-2].str));}
-#line 1506 "y.tab.c" /* yacc.c:1646  */
+#line 1521 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 14:
-#line 134 "compiler.y" /* yacc.c:1646  */
+#line 149 "compiler.y" /* yacc.c:1646  */
     {if(flag) func((yyvsp[-2].str));}
-#line 1512 "y.tab.c" /* yacc.c:1646  */
+#line 1527 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 16:
-#line 136 "compiler.y" /* yacc.c:1646  */
+#line 151 "compiler.y" /* yacc.c:1646  */
     {if(flag) func((yyvsp[-2].str));}
-#line 1518 "y.tab.c" /* yacc.c:1646  */
+#line 1533 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 17:
-#line 137 "compiler.y" /* yacc.c:1646  */
+#line 152 "compiler.y" /* yacc.c:1646  */
     {if(flag) func((yyvsp[-2].str));}
-#line 1524 "y.tab.c" /* yacc.c:1646  */
+#line 1539 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 19:
-#line 139 "compiler.y" /* yacc.c:1646  */
+#line 154 "compiler.y" /* yacc.c:1646  */
     {if(flag) func((yyvsp[-2].str));}
-#line 1530 "y.tab.c" /* yacc.c:1646  */
+#line 1545 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 20:
-#line 140 "compiler.y" /* yacc.c:1646  */
+#line 155 "compiler.y" /* yacc.c:1646  */
     {if(flag) func((yyvsp[-2].str));}
-#line 1536 "y.tab.c" /* yacc.c:1646  */
+#line 1551 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 21:
-#line 141 "compiler.y" /* yacc.c:1646  */
+#line 156 "compiler.y" /* yacc.c:1646  */
     {if(flag) func((yyvsp[-2].str));}
-#line 1542 "y.tab.c" /* yacc.c:1646  */
+#line 1557 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 22:
-#line 142 "compiler.y" /* yacc.c:1646  */
+#line 157 "compiler.y" /* yacc.c:1646  */
     {if(flag) func((yyvsp[-2].str));}
-#line 1548 "y.tab.c" /* yacc.c:1646  */
+#line 1563 "y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 27:
+#line 162 "compiler.y" /* yacc.c:1646  */
+    {assgFlag = 2;}
+#line 1569 "y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 30:
+#line 165 "compiler.y" /* yacc.c:1646  */
+    {assgFlag = 1;}
+#line 1575 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 31:
-#line 151 "compiler.y" /* yacc.c:1646  */
+#line 166 "compiler.y" /* yacc.c:1646  */
     {if(flag) func((yyvsp[0].str));}
-#line 1554 "y.tab.c" /* yacc.c:1646  */
+#line 1581 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 32:
-#line 152 "compiler.y" /* yacc.c:1646  */
-    {arrayDim = (yyvsp[0].ivalue);}
-#line 1560 "y.tab.c" /* yacc.c:1646  */
+#line 167 "compiler.y" /* yacc.c:1646  */
+    {assgFlag = 1;arrayDim = (yyvsp[0].ivalue);}
+#line 1587 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 33:
-#line 153 "compiler.y" /* yacc.c:1646  */
+#line 168 "compiler.y" /* yacc.c:1646  */
     {if(flag) func((yyvsp[0].str));}
-#line 1566 "y.tab.c" /* yacc.c:1646  */
+#line 1593 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 36:
-#line 162 "compiler.y" /* yacc.c:1646  */
-    {printf("flag %d\n",flag);if(flag) funcArray((yyvsp[-3].str),arrayDim);}
-#line 1572 "y.tab.c" /* yacc.c:1646  */
+#line 177 "compiler.y" /* yacc.c:1646  */
+    {if(flag) funcArray((yyvsp[-3].str),arrayDim);}
+#line 1599 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 37:
-#line 166 "compiler.y" /* yacc.c:1646  */
+#line 181 "compiler.y" /* yacc.c:1646  */
     {if(flag) func((yyvsp[0].str));flag=0;}
-#line 1578 "y.tab.c" /* yacc.c:1646  */
+#line 1605 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 44:
-#line 176 "compiler.y" /* yacc.c:1646  */
+#line 191 "compiler.y" /* yacc.c:1646  */
     {++scope;push(scope);}
-#line 1584 "y.tab.c" /* yacc.c:1646  */
+#line 1611 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 45:
-#line 176 "compiler.y" /* yacc.c:1646  */
+#line 191 "compiler.y" /* yacc.c:1646  */
     {pop();}
-#line 1590 "y.tab.c" /* yacc.c:1646  */
+#line 1617 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 54:
-#line 191 "compiler.y" /* yacc.c:1646  */
+#line 206 "compiler.y" /* yacc.c:1646  */
     {type = "int";flag=1;}
-#line 1596 "y.tab.c" /* yacc.c:1646  */
+#line 1623 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 55:
-#line 192 "compiler.y" /* yacc.c:1646  */
+#line 207 "compiler.y" /* yacc.c:1646  */
     {type = "float";}
-#line 1602 "y.tab.c" /* yacc.c:1646  */
+#line 1629 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 56:
-#line 193 "compiler.y" /* yacc.c:1646  */
-    {type = "char";}
-#line 1608 "y.tab.c" /* yacc.c:1646  */
+#line 208 "compiler.y" /* yacc.c:1646  */
+    {type = "char";flag=2;}
+#line 1635 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 57:
-#line 194 "compiler.y" /* yacc.c:1646  */
+#line 209 "compiler.y" /* yacc.c:1646  */
     {type = "double";}
-#line 1614 "y.tab.c" /* yacc.c:1646  */
+#line 1641 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 58:
-#line 195 "compiler.y" /* yacc.c:1646  */
+#line 210 "compiler.y" /* yacc.c:1646  */
     {type = "void";}
-#line 1620 "y.tab.c" /* yacc.c:1646  */
+#line 1647 "y.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1624 "y.tab.c" /* yacc.c:1646  */
+#line 1651 "y.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1848,7 +1875,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 234 "compiler.y" /* yacc.c:1906  */
+#line 249 "compiler.y" /* yacc.c:1906  */
 
 
 int main(int argc, char *argv[])
