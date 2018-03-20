@@ -80,7 +80,7 @@ int flag=0;
 int arrayDim=0;
 int assgFlag=0;
 int i=0;
-
+int parameterFlag=0;
 void push(int val){
   char *temp;
   int len = strlen(stack);
@@ -1600,54 +1600,60 @@ yyreduce:
 
   case 37:
 #line 181 "compiler.y" /* yacc.c:1646  */
-    {if(flag) func((yyvsp[0].str));flag=0;}
+    {func((yyvsp[0].str));parameterFlag=1;++scope;push(scope);}
 #line 1605 "y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 43:
+#line 189 "compiler.y" /* yacc.c:1646  */
+    {if(flag) func((yyvsp[0].str));}
+#line 1611 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 44:
 #line 191 "compiler.y" /* yacc.c:1646  */
-    {++scope;push(scope);}
-#line 1611 "y.tab.c" /* yacc.c:1646  */
+    {if(!parameterFlag)++scope,push(scope),parameterFlag=0;}
+#line 1617 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 45:
 #line 191 "compiler.y" /* yacc.c:1646  */
     {pop();}
-#line 1617 "y.tab.c" /* yacc.c:1646  */
+#line 1623 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 54:
 #line 206 "compiler.y" /* yacc.c:1646  */
     {type = "int";flag=1;}
-#line 1623 "y.tab.c" /* yacc.c:1646  */
+#line 1629 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 55:
 #line 207 "compiler.y" /* yacc.c:1646  */
     {type = "float";}
-#line 1629 "y.tab.c" /* yacc.c:1646  */
+#line 1635 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 56:
 #line 208 "compiler.y" /* yacc.c:1646  */
     {type = "char";flag=2;}
-#line 1635 "y.tab.c" /* yacc.c:1646  */
+#line 1641 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 57:
 #line 209 "compiler.y" /* yacc.c:1646  */
     {type = "double";}
-#line 1641 "y.tab.c" /* yacc.c:1646  */
+#line 1647 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 58:
 #line 210 "compiler.y" /* yacc.c:1646  */
     {type = "void";}
-#line 1647 "y.tab.c" /* yacc.c:1646  */
+#line 1653 "y.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1651 "y.tab.c" /* yacc.c:1646  */
+#line 1657 "y.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires

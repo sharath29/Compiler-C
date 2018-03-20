@@ -15,7 +15,7 @@ int flag=0;
 int arrayDim=0;
 int assgFlag=0;
 int i=0;
-
+int parameterFlag=0;
 void push(int val){
   char *temp;
   int len = strlen(stack);
@@ -178,7 +178,7 @@ ArrayUsage : ID'['Assignment']' {if(flag) funcArray($1,arrayDim);}
 	
 
 /* Function block */
-Function: Type ID {if(flag) func($2);flag=0;} '(' ArgListOpt ')'  CompoundStmt 
+Function: Type ID {func($2);parameterFlag=1;++scope;push(scope);} '(' ArgListOpt ')'  CompoundStmt 
 	;
 ArgListOpt: ArgList 
 	|
@@ -186,9 +186,9 @@ ArgListOpt: ArgList
 ArgList:  ArgList ',' Arg 	
 	| Arg 					
 	;
-Arg:	Type ID 
+Arg:	Type ID {if(flag) func($2);}
 	;
-CompoundStmt:	'{' {++scope;push(scope);} StmtList '}' {pop();}
+CompoundStmt:	'{' {if(!parameterFlag)++scope,push(scope),parameterFlag=0;} StmtList '}' {pop();}
 	;
 
 StmtList:	StmtList Stmt
