@@ -38,7 +38,7 @@ else	return ELSE;
 printf  return PRINTF;
 struct 	return STRUCT;
 ^"#include ".+ ;
-{digit}+       return NUM; 
+{digit}+       {yylval.ivalue = atoi(yytext);return NUM;} 
 {alpha}({alpha}|{digit})* {yylval.str = strdup(yytext);return ID;}
 \"[^\"\n]+\" return STRING;
 "<="    return LE;
@@ -57,11 +57,7 @@ int yywrap(){
 	return 1;
 }
 
-/*
-<INITIAL>{type_declaration}[ ]*     {BEGIN(VALUEPARSE);}
-<VALUEPARSE>{identifier}    {check(yytext);BEGIN(ENDSTATE);}
-<ENDSTATE>";"    {BEGIN(INITIAL);}
-*/
+
 void check(char *str){
 	int index = hashFunction(str,stack);
 	struct template *temp = searchIndex(index,str);

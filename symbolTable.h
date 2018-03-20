@@ -9,6 +9,7 @@ struct template{
 	char type[50];
 	char scope[10];
 	char stack[10];
+	int dimension;
 	int level;
 	struct template *next;
 }*table[100];

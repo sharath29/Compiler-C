@@ -895,7 +895,7 @@ YY_RULE_SETUP
 case 15:
 YY_RULE_SETUP
 #line 41 "compiler.l"
-return NUM; 
+{yylval.ivalue = atoi(yytext);return NUM;} 
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
@@ -1977,11 +1977,7 @@ int yywrap(){
 	return 1;
 }
 
-/*
-<INITIAL>{type_declaration}[ ]*     {BEGIN(VALUEPARSE);}
-<VALUEPARSE>{identifier}    {check(yytext);BEGIN(ENDSTATE);}
-<ENDSTATE>";"    {BEGIN(INITIAL);}
-*/
+
 void check(char *str){
 	int index = hashFunction(str,stack);
 	struct template *temp = searchIndex(index,str);

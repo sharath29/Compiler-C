@@ -57,8 +57,8 @@ extern int yydebug;
     ELSE = 267,
     PRINTF = 268,
     STRUCT = 269,
-    NUM = 270,
-    ID = 271,
+    ID = 270,
+    NUM = 271,
     INCLUDE = 272,
     DOT = 273,
     AND = 274,
@@ -84,8 +84,8 @@ extern int yydebug;
 #define ELSE 267
 #define PRINTF 268
 #define STRUCT 269
-#define NUM 270
-#define ID 271
+#define ID 270
+#define NUM 271
 #define INCLUDE 272
 #define DOT 273
 #define AND 274
@@ -102,7 +102,7 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 60 "compiler.y" /* yacc.c:1909  */
+#line 107 "compiler.y" /* yacc.c:1909  */
 
 	int ivalue;
 	char *str;
