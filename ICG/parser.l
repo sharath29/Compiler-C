@@ -17,12 +17,13 @@ float 						{yylval.value.type="float"; return FLOAT;}
 void 						{yylval.value.type="void"; return VOID;}
 return 						{return RETURN;}
 printf						{return PRINT;}
+else						{return ELSE;}
 #include.*					{return PREPROC;}
 "\+\+"						{return INC;}
 {alpha}({alpha}|{digit})* 	{yylval.value.str = strdup(yytext); yylval.value.type = "identifier"; return ID;}
 {digit}+ 					{yylval.value.str = strdup(yytext); yylval.value.type = "integer"; return NUM;}
 {digit}+\.{digit} 			{yylval.value.str = strdup(yytext); yylval.value.type = "float"; return REAL;}
-\"[^\"]*\" 						{yylval.value.str = strdup(yytext); yylval.value.type = "char"; return STRING;}
+\"[^\"]*\" 					{yylval.value.str = strdup(yytext); yylval.value.type = "char"; return STRING;}
 '=' 						{yylval.value.str = strdup(yytext); return '=';}
 . 							{return yytext[0];}
 %%

@@ -6,6 +6,7 @@ int num=0;
 struct table{
 	char *name;
 	char *type;
+	char *tokentype;
 	int level;
 	int scope;
 }symbolTable[1000];
@@ -28,9 +29,10 @@ struct table checkInfo(char *name){
 	}
 }
 
-void insertIntoTable(char *name,char *type,int level,int scope){
+void insertIntoTable(char *name, char *type, char *tokentype, int level, int scope){
 		symbolTable[num].name=name;
 		symbolTable[num].type=type;
+		symbolTable[num].tokentype=tokentype;
 		symbolTable[num].level=level;
 		symbolTable[num].scope=scope;
 		num++;
@@ -38,7 +40,7 @@ void insertIntoTable(char *name,char *type,int level,int scope){
 
 void print(){
 	for(int i=0;i<num;++i){
-		printf("%s\t\t%s\t\t%d\t\t%d\n",symbolTable[i].name,symbolTable[i].type,symbolTable[i].scope,symbolTable[i].level);
+		printf("%-12s %-12s %-12s %-12d %-12d\n",symbolTable[i].name,symbolTable[i].type,symbolTable[i].tokentype,symbolTable[i].level,symbolTable[i].scope);
 	}
 }
 
