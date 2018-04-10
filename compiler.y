@@ -111,7 +111,7 @@ void checkPresent(char *str){
 %token FOR WHILE
 %token IF ELSE PRINTF
 %token STRUCT
-%token<str> ID
+%token<dragon> ID
 %token<ivalue> NUM
 %token INCLUDE
 %token DOT
@@ -123,6 +123,10 @@ void checkPresent(char *str){
 %union{
 	int ivalue;
 	char *str;
+	struct iden{
+		char *name;
+		char *type;
+	}dragon;
 }
 
 %%
@@ -144,17 +148,17 @@ Declaration: Type Assignment ';' {flag=0;}
 
 
 /* Assignment block */
-Assignment: ID '=' Assignment {checkInsert($1,assgFlag);}
-	| ID '=' FunctionCall {if(flag) func($1);}
-	| ID '=' ArrayUsage {if(flag) func($1);}
+Assignment: ID '=' Assignment {checkInsert($1.name,assgFlag);}
+	| ID '=' FunctionCall {if(flag) func($1.name);}
+	| ID '=' ArrayUsage {if(flag) func($1.name);}
 	| ArrayUsage '=' Assignment
-	| ID ',' Assignment {if(flag) func($1);}
-	| ID ',' ArrayUsage {if(flag) func($1);}
+	| ID ',' Assignment {if(flag) func($1.name);}
+	| ID ',' ArrayUsage {if(flag) func($1.name);}
 	| NUM ',' Assignment
-	| ID '+' Assignment {if(flag) func($1);}
-	| ID '-' Assignment {if(flag) func($1);}
-	| ID '*' Assignment {if(flag) func($1);}
-	| ID '/' Assignment {if(flag) func($1);}
+	| ID '+' Assignment {if(flag) func($1.name);}
+	| ID '-' Assignment {if(flag) func($1.name);}
+	| ID '*' Assignment {if(flag) func($1.name);}
+	| ID '/' Assignment {if(flag) func($1.name);}
 	| NUM '+' Assignment
 	| NUM '-' Assignment
 	| NUM '*' Assignment
@@ -163,9 +167,9 @@ Assignment: ID '=' Assignment {checkInsert($1,assgFlag);}
 	| '(' Assignment ')'
 	| '-' '(' Assignment ')'
 	| '-' NUM {assgFlag = 1;}
-	| '-' ID {if(flag) func($2);}
+	| '-' ID {if(flag) func($2.name);}
 	| NUM {assgFlag = 1;arrayDim = $1;}
-	| ID {if(flag) func($1);}
+	| ID {if(flag) func($1.name);}
 	;
 
 /* Function Call Block */
@@ -174,11 +178,11 @@ FunctionCall : ID'('')'
 	;
 
 /* Array Usage */
-ArrayUsage : ID'['Assignment']' {if(flag) funcArray($1,arrayDim);}
+ArrayUsage : ID'['Assignment']' {if(flag) funcArray($1.name,arrayDim);}
 	
 
 /* Function block */
-Function: Type ID {func($2);parameterFlag=1;++scope;push(scope);} '(' ArgListOpt ')'  CompoundStmt 
+Function: Type ID {func($2.name);parameterFlag=1;++scope;push(scope);} '(' ArgListOpt ')'  CompoundStmt 
 	;
 ArgListOpt: ArgList 
 	|
@@ -186,7 +190,7 @@ ArgListOpt: ArgList
 ArgList:  ArgList ',' Arg 	
 	| Arg 					
 	;
-Arg:	Type ID {if(flag) func($2);}
+Arg:	Type ID {if(flag) func($2.name);}
 	;
 CompoundStmt:	'{' {if(!parameterFlag)++scope,push(scope),parameterFlag=0;} StmtList '}' {pop();}
 	;

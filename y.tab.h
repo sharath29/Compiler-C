@@ -106,8 +106,12 @@ union YYSTYPE
 
 	int ivalue;
 	char *str;
+	struct iden{
+		char *name;
+		char *type;
+	}dragon;
 
-#line 111 "y.tab.h" /* yacc.c:1909  */
+#line 115 "y.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

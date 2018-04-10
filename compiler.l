@@ -39,7 +39,7 @@ printf  return PRINTF;
 struct 	return STRUCT;
 ^"#include ".+ ;
 {digit}+       {yylval.ivalue = atoi(yytext);return NUM;} 
-{alpha}({alpha}|{digit})* {yylval.str = strdup(yytext);return ID;}
+{alpha}({alpha}|{digit})* {yylval.dragon.name = strdup(yytext);yylval.dragon.type="string";return ID;}
 \"[^\"\n]+\" return STRING;
 "<="    return LE;
 ">="    return GE;
